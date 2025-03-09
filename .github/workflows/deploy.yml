@@ -9,38 +9,38 @@ env:
   DOCKERHUB_REPO: yxy1109/libreoffice  # DockerHub 仓库名
 
 jobs:
-#  build-and-push:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: 一，获取代码
-#        uses: actions/checkout@v4
-#
-#      - name: 二，登录Docker Hub
-#        uses: docker/login-action@v3
-#        with:
-#          username: ${{ secrets.DOCKERHUB_USERNAME }}
-#          password: ${{ secrets.DOCKERHUB_TOKEN }}
-#
-#      - name: 三，生成标签
-#        id: tag
-#        run: |
-#          # 使用提交时间戳作为动态标签（例如 20240615-123456）
-#          echo "TAG=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
-#
-#      - name: 四，镜像构建和推送
-#        uses: docker/build-push-action@v5
-#        with:
-#          context: .
-#          push: true
-#          tags: |
-#            ${{ env.DOCKERHUB_REPO }}:latest
-#            ${{ env.DOCKERHUB_REPO }}:${{ steps.tag.outputs.TAG }}
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 一，获取代码
+        uses: actions/checkout@v4
+
+      - name: 二，登录Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: 三，生成标签
+        id: tag
+        run: |
+          # 使用提交时间戳作为动态标签（例如 20240615-123456）
+          echo "TAG=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
+
+      - name: 四，镜像构建和推送
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.DOCKERHUB_REPO }}:latest
+            ${{ env.DOCKERHUB_REPO }}:${{ steps.tag.outputs.TAG }}
 
   deploy:
     runs-on: ubuntu-latest
-#    needs: build-and-push  # 依赖构建任务
+    needs: build-and-push  # 依赖构建任务
     steps:
-      - name: 一，连接ssh
+      - name: 连接ssh
         # https://github.com/appleboy/ssh-action/blob/master/README.zh-cn.md
         uses: appleboy/ssh-action@v1.2.1
         with:
