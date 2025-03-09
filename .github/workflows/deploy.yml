@@ -49,9 +49,8 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
             whoami
-            pwd
-            ls
+            cd /root/docker-compose
             # 拉取最新镜像
-            docker compose pull
+            docker-compose -f docker-compose-libreoffice.yml pull
             # 重启服务
-            docker compose up -d --force-recreate
+            docker-compose -f docker-compose-libreoffice.yml up -d --force-recreate
