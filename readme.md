@@ -1,7 +1,8 @@
 ## 构建镜像
 
-cd /root/code/librefoffice
-docker build -t libreoffice:1.0 -f Dockerfile .
+> cd /root/code/librefoffice
+>
+> docker build -t libreoffice:1.0 -f Dockerfile .
 
 ## 运行镜像
 
