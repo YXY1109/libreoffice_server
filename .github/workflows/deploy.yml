@@ -50,7 +50,6 @@ jobs:
           script: |
             whoami
             cd /root/docker-compose
-            docker pull yxy1109/libreoffice:latest
             # 拉取最新镜像
             docker-compose -f docker-compose-libreoffice.yml pull
             # 重启服务
