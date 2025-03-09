@@ -40,13 +40,17 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-and-push  # 依赖构建任务
     steps:
-      - name: SSH into server and deploy
-        uses: appleboy/ssh-action@v1
+      - name: 一，连接ssh
+        # https://github.com/appleboy/ssh-action/blob/master/README.zh-cn.md
+        uses: appleboy/ssh-action@v1.2.1
         with:
-          host: ${{ secrets.SERVER_IP }}
+          host: ${{ secrets.SSH_KNOWN_HOSTS }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd /path/to/your/project  # 服务器上的项目路径
-            docker compose pull      # 拉取最新镜像
-            docker compose up -d      # 重启服务
+          script: whoami
+
+      - name: 二，拉取最新镜像并重启服务
+        run: |
+          cd .  # 服务器上的项目路径
+          docker-compose pull      # 拉取最新镜像
+          docker-compose up -d --force-recreate     # 重启服务
