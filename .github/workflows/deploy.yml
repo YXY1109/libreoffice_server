@@ -47,11 +47,11 @@ jobs:
           host: ${{ secrets.SSH_KNOWN_HOSTS }}
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
-          script: whoami
-
-      - name: 二，拉取最新镜像并重启服务
-        run: |
-          pwd
-          ls
-          docker compose pull      # 拉取最新镜像
-          docker compose up -d --force-recreate     # 重启服务
+          script: |
+            whoami
+            pwd
+            ls
+            # 拉取最新镜像
+            docker compose pull
+            # 重启服务
+            docker compose up -d --force-recreate
