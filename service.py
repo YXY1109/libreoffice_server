@@ -2,6 +2,7 @@ import asyncio
 import os
 import shutil
 import tempfile
+from datetime import datetime
 
 import aiofiles
 from loguru import logger
@@ -79,6 +80,13 @@ async def convert(request: Request):
     finally:
         # 删除临时目录
         shutil.rmtree(temp_dir)
+
+
+@app.route("/test", methods=["GET"])
+async def test(request):
+    # 获取当前年月日时分秒的时间
+    formatted_now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return response.json({"test": f"我是libreoffice测试接口：{formatted_now}"}, status=200)
 
 
 if __name__ == '__main__':
