@@ -52,6 +52,6 @@ jobs:
       - name: 二，拉取最新镜像并重启服务
         run: |
           pwd
-          ls -l
-          docker-compose pull      # 拉取最新镜像
-          docker-compose up -d --force-recreate     # 重启服务
+          ll
+          docker compose pull      # 拉取最新镜像
+          docker compose up -d --force-recreate     # 重启服务
