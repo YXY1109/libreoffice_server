@@ -2,34 +2,51 @@ name: 部署libreoffice服务
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master ] # 仅当 main 分支有变更时触发
+  workflow_dispatch: # 支持手动触发
+
+env:
+  DOCKERHUB_REPO: yxy1109/libreoffice  # DockerHub 仓库名
 
 jobs:
-  build-and-deploy:
+  build-and-push:
     runs-on: ubuntu-latest
     steps:
-      - name: 获取代码
-        uses: actions/checkout@v3
+      - name: 一，获取代码
+        uses: actions/checkout@v4
 
-      - name: 登录Docker Hub
-        uses: docker/login-action@v2
+      - name: 二，登录Docker Hub
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push Docker image
+      - name: 三，生成标签
+        id: tag
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/your_repo:latest .
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/your_repo:latest
+          # 使用提交时间戳作为动态标签（例如 20240615-123456）
+          echo "TAG=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
 
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v0.1.10
+      - name: 四，镜像构建和推送
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.DOCKERHUB_REPO }}:latest
+            ${{ env.DOCKERHUB_REPO }}:${{ steps.tag.outputs.TAG }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-push  # 依赖构建任务
+    steps:
+      - name: SSH into server and deploy
+        uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT }}
           script: |
-            cd /path/to/your_project  # 服务器项目路径
-            docker-compose pull web
-            docker-compose up -d --force-recreate web
+            cd /path/to/your/project  # 服务器上的项目路径
+            docker compose pull      # 拉取最新镜像
+            docker compose up -d      # 重启服务
