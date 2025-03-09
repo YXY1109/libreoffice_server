@@ -51,6 +51,7 @@ jobs:
 
       - name: 二，拉取最新镜像并重启服务
         run: |
-          cd .  # 服务器上的项目路径
+          pwd
+          ls -l
           docker-compose pull      # 拉取最新镜像
           docker-compose up -d --force-recreate     # 重启服务
