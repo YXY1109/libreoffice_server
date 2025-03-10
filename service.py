@@ -86,7 +86,7 @@ async def convert(request: Request):
 async def test(request):
     # 获取当前年月日时分秒的时间
     formatted_now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    return response.json({"test": f"2我是libreoffice测试接口：{formatted_now}"}, status=200)
+    return response.json({"test": f"3我是libreoffice测试接口：{formatted_now}"}, status=200)
 
 
 if __name__ == '__main__':
