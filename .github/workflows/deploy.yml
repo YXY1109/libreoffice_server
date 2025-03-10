@@ -49,6 +49,13 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
             whoami
+            # 进入代码仓库目录
+            cd /root/code/libreoffice_server
+            # 拉取最新代码
+            git pull origin master
+            # 复制 docker-compose 文件到目标目录
+            cp docker-compose-libreoffice.yml /root/docker-compose/
+            # 进入 docker-compose 目录
             cd /root/docker-compose
             # 拉取最新镜像
             docker-compose -f docker-compose-libreoffice.yml pull

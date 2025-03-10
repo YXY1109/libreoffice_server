@@ -9,6 +9,6 @@ services:
     # 端口映射，将宿主机的 7005 端口映射到容器的 7005 端口
     ports:
       - "7005:7005"
-    # 数据卷挂载，将宿主机的 /opt/libreoffice7.1 目录挂载到容器的 /opt/libreoffice7.1 目录
+    # 1数据卷挂载，将宿主机的 /opt/libreoffice7.1 目录挂载到容器的 /opt/libreoffice7.1 目录
     volumes:
       - /opt/libreoffice7.1:/opt/libreoffice7.1
