@@ -1,3 +1,4 @@
+import asyncio
 import os
 from mimetypes import guess_type
 
@@ -15,7 +16,9 @@ async def create_bucket_if_not_exists(client, bucket_name):
     :param bucket_name: 桶名称
     """
     bucket_exists = client.bucket_exists(bucket_name)
-    if not bucket_exists:
+    if bucket_exists:
+        logger.info(f"桶 {bucket_name} 已存在")
+    else:
         try:
             client.make_bucket(bucket_name=bucket_name)
             logger.info(f"创建桶：{bucket_name}，成功！")
@@ -35,10 +38,11 @@ async def upload_file(client, bucket_name, source_file):
     content_type, _ = guess_type(source_file)
 
     try:
-        async with aiofiles.open(source_file, 'rb') as file_data:
+        # 使用 aiofiles 异步打开文件只是为了保证异步流程，但 minio 的 put_object 方法目前不支持异步文件对象，所以使用 open 同步打开文件
+        async with aiofiles.open(source_file, 'rb') as file:
             file_stat = os.stat(source_file)
-            data = await file_data.read()
-            client.put_object(bucket_name, destination_file, data, file_stat.st_size)
+            with open(source_file, 'rb') as sync_file:
+                client.put_object(bucket_name, destination_file, data=sync_file, length=file_stat.st_size)
             logger.success(f"File {destination_file} uploaded with content-type {content_type}.")
 
             file_url = client.presigned_get_object(bucket_name, destination_file)
@@ -74,3 +78,7 @@ async def upload_to_minio(user_id: int, source_file_list: list | str):
             file_url_list.append(file_url)
 
     return file_url_list
+
+
+if __name__ == '__main__':
+    asyncio.run(upload_to_minio(1, "/Users/cj/Downloads/test.doc"))
