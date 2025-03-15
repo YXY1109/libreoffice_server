@@ -38,17 +38,15 @@ async def upload_file(client, bucket_name, source_file):
     content_type, _ = guess_type(source_file)
 
     try:
-        # 使用 aiofiles 异步打开文件只是为了保证异步流程，但 minio 的 put_object 方法目前不支持异步文件对象，所以使用 open 同步打开文件
-        async with aiofiles.open(source_file, 'rb') as file:
-            file_stat = os.stat(source_file)
-            with open(source_file, 'rb') as sync_file:
-                client.put_object(bucket_name, destination_file, data=sync_file, length=file_stat.st_size)
-            logger.success(f"File {destination_file} uploaded with content-type {content_type}.")
-
-            file_url = client.presigned_get_object(bucket_name, destination_file)
-            file_url = file_url.replace(" ", "%20")
-            logger.info(f"文件下载地址：{file_url}")
-            return file_url
+        # minio 的 put_object 方法目前不支持异步文件对象，所以使用 open 同步打开文件
+        file_stat = os.stat(source_file)
+        with open(source_file, 'rb') as sync_file:
+            client.put_object(bucket_name, destination_file, data=sync_file, length=file_stat.st_size)
+        logger.success(f"File {destination_file} uploaded with content-type {content_type}.")
+        file_url = client.presigned_get_object(bucket_name, destination_file)
+        file_url = file_url.replace(" ", "%20")
+        logger.info(f"文件下载地址：{file_url}")
+        return file_url
     except Exception as e:
         logger.error(f"上传文件 {source_file} 失败: {e}")
         return None
