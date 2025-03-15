@@ -13,7 +13,7 @@ from src.minio_utils import upload_to_minio
 # 定义文件大小限制常量
 MAX_FILE_SIZE = 10 * 1024 * 1024
 
-app = Sanic("libreoffice服务")
+app = Sanic("Libreoffice_Service")
 
 
 # 封装错误响应函数

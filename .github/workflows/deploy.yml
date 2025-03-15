@@ -24,6 +24,8 @@ jobs:
       - name: 三，生成标签
         id: tag
         run: |
+          # 设置时区为 Asia/Shanghai
+          export TZ=Asia/Shanghai
           # 使用提交时间戳作为动态标签（例如 20240615-123456）
           echo "TAG=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
 
@@ -55,6 +57,8 @@ jobs:
             git pull origin master
             # 复制 docker-compose 文件到目标目录
             cp docker-compose-libreoffice.yml /root/docker-compose/
+            # 复制 .env 文件到目标目录
+            cp .env /root/docker-compose/  # 确保 .env 文件已经手动上传到服务器的这个目录# 复制 .env 文件到目标目录
             # 进入 docker-compose 目录
             cd /root/docker-compose
             # 拉取最新镜像

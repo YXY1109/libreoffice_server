@@ -9,8 +9,6 @@ load_dotenv()
 class ConfigSettings(BaseSettings):
     # 定义环境变量及其类型
     MINIO_URL: str
-    MINIO_USER: str
-    MINIO_PASSWORD: str
     MINIO_ACCESS_KEY: str
     MINIO_SECRET_KEY: str
 

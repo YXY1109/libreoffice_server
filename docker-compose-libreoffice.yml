@@ -12,3 +12,5 @@ services:
     # 1数据卷挂载，将宿主机的 /opt/libreoffice7.1 目录挂载到容器的 /opt/libreoffice7.1 目录
     volumes:
       - /opt/libreoffice7.1:/opt/libreoffice7.1
+    env_file:
+      - .env
