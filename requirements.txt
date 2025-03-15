@@ -1,3 +1,6 @@
 sanic==24.12.0
 aiofiles==24.1.0
 loguru==0.7.3
+python-dotenv==1.0.1
+pydantic==2.10.6
+minio==7.2.15
