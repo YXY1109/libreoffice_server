@@ -64,7 +64,7 @@ async def convert(request: Request):
         output_path = await convert_file_x(input_path, temp_dir)
         # 上传到minio
         if output_path:
-            file_url = asyncio.to_thread(upload_to_minio, user_id, output_path)
+            file_url = await asyncio.to_thread(upload_to_minio, user_id, output_path)
             if file_url:
                 return response.json({'file_urls': file_url}, status=200)
             else:
