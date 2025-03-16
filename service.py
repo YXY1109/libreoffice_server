@@ -1,3 +1,4 @@
+import asyncio
 import os
 from datetime import datetime
 
@@ -36,11 +37,12 @@ async def server_down(app_d, loop):
 async def test(request):
     # 获取当前年月日时分秒的时间
     formatted_now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    return response.json({"test": f"6我是libreoffice测试接口：{formatted_now}"}, status=200)
+    return response.json({"test": f"7我是libreoffice测试接口：{formatted_now}"}, status=200)
 
 
 @app.route('/convert', methods=['POST'])
 async def convert(request: Request):
+    user_id = request.form.get("user_id", 1)
     # 检查请求中是否包含文件
     if 'file' not in request.files:
         return response.json({'error': '文件不存在'}, status=400)
@@ -62,9 +64,9 @@ async def convert(request: Request):
         output_path = await convert_file_x(input_path, temp_dir)
         # 上传到minio
         if output_path:
-            file_url = await upload_to_minio(1, output_path)
+            file_url = asyncio.to_thread(upload_to_minio, user_id, output_path)
             if file_url:
-                return response.json({'file_url': file_url}, status=200)
+                return response.json({'file_urls': file_url}, status=200)
             else:
                 return error_response('上传失败', 500)
         else:

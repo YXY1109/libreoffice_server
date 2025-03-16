@@ -1,32 +1,33 @@
-import asyncio
 import os
 from mimetypes import guess_type
 
-import aiofiles
 from loguru import logger
 from minio import Minio
 
 from src.config import config
 
 
-async def create_bucket_if_not_exists(client, bucket_name):
+def create_bucket_if_not_exists(client, bucket_name):
     """
     如果桶不存在，则创建桶
     :param client: Minio客户端
     :param bucket_name: 桶名称
     """
-    bucket_exists = client.bucket_exists(bucket_name)
-    if bucket_exists:
-        logger.info(f"桶 {bucket_name} 已存在")
-    else:
-        try:
-            client.make_bucket(bucket_name=bucket_name)
-            logger.info(f"创建桶：{bucket_name}，成功！")
-        except Exception as e:
-            logger.error(f"创建桶 {bucket_name} 失败: {e}")
+    try:
+        bucket_exists = client.bucket_exists(bucket_name)
+        if bucket_exists:
+            logger.info(f"桶 {bucket_name} 已存在")
+        else:
+            try:
+                client.make_bucket(bucket_name=bucket_name)
+                logger.info(f"创建桶：{bucket_name}，成功！")
+            except Exception as e:
+                logger.error(f"创建桶 {bucket_name} 失败: {e}")
+    except Exception as e:
+        logger.error(f"create bucket failed: {e}")
 
 
-async def upload_file(client, bucket_name, source_file):
+def upload_file(client, bucket_name, source_file):
     """
     上传单个文件到Minio
     :param client: Minio客户端
@@ -52,7 +53,7 @@ async def upload_file(client, bucket_name, source_file):
         return None
 
 
-async def upload_to_minio(user_id: int, source_file_list: list | str):
+def upload_to_minio(user_id: int, source_file_list: list | str):
     """
     上传文件到Minio
     :param user_id: 用户id
@@ -64,14 +65,15 @@ async def upload_to_minio(user_id: int, source_file_list: list | str):
     logger.info(f"Minio客户端创建成功；{client}")
 
     bucket_name = f"libreoffice-{user_id}"
-    await create_bucket_if_not_exists(client, bucket_name)
+    logger.info(f"bucket_name: {bucket_name}")
+    create_bucket_if_not_exists(client, bucket_name)
 
     if isinstance(source_file_list, str):
         source_file_list = [source_file_list]
 
     file_url_list = []
     for source_file in source_file_list:
-        file_url = await upload_file(client, bucket_name, source_file)
+        file_url = upload_file(client, bucket_name, source_file)
         if file_url:
             file_url_list.append(file_url)
 
@@ -79,4 +81,4 @@ async def upload_to_minio(user_id: int, source_file_list: list | str):
 
 
 if __name__ == '__main__':
-    asyncio.run(upload_to_minio(1, "/Users/cj/Downloads/test.doc"))
+    upload_to_minio(3, "/Users/cj/Downloads/test.doc")
