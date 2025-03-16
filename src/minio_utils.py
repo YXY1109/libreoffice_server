@@ -15,6 +15,7 @@ def create_bucket_if_not_exists(client, bucket_name):
     """
     try:
         bucket_exists = client.bucket_exists(bucket_name)
+        logger.info(f"Bucket exists: {bucket_exists}")
         if bucket_exists:
             logger.info(f"桶 {bucket_name} 已存在")
         else:
