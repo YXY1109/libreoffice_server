@@ -37,7 +37,7 @@ async def server_down(app_d, loop):
 async def test(request):
     # 获取当前年月日时分秒的时间
     formatted_now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    return response.json({"test": f"7我是libreoffice测试接口：{formatted_now}"}, status=200)
+    return response.json({"test": f"我是libreoffice测试接口：{formatted_now}"}, status=200)
 
 
 @app.route('/convert', methods=['POST'])
