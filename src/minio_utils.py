@@ -7,7 +7,7 @@ from minio import Minio
 from src.config import config
 
 
-def create_bucket_if_not_exists(client, bucket_name):
+def create_bucket_if_not_exists(client: Minio, bucket_name: str) -> None:
     """
     如果桶不存在，则创建桶
     :param client: Minio客户端
@@ -28,7 +28,7 @@ def create_bucket_if_not_exists(client, bucket_name):
         logger.error(f"create bucket failed: {e}")
 
 
-def upload_file(client, bucket_name, source_file):
+def upload_file(client: Minio, bucket_name: str, source_file: str) -> str | None:
     """
     上传单个文件到Minio
     :param client: Minio客户端
@@ -54,7 +54,7 @@ def upload_file(client, bucket_name, source_file):
         return None
 
 
-def upload_to_minio(user_id: int, source_file_list: list | str):
+def upload_to_minio(user_id: int, source_file_list: list[str] | str) -> list[str]:
     """
     上传文件到Minio
     :param user_id: 用户id
