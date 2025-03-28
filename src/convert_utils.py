@@ -1,5 +1,6 @@
 import asyncio
 import os
+from typing import Tuple
 
 from loguru import logger
 
@@ -7,7 +8,7 @@ from loguru import logger
 SUPPORTED_EXTENSIONS = {".doc": ".docx", ".ppt": ".pptx", ".xls": ".xlsx"}
 
 
-def get_target_extension(file_ext):
+def get_target_extension(file_ext: str) -> str | None:
     """
     根据文件扩展名获取目标扩展名
     :param file_ext: 文件扩展名
@@ -16,7 +17,7 @@ def get_target_extension(file_ext):
     return SUPPORTED_EXTENSIONS.get(file_ext.lower())
 
 
-async def run_conversion_command(command):
+async def run_conversion_command(command: str) -> Tuple[str | None, str | None]:
     """
     执行文件转换命令
     :param command: 要执行的命令
@@ -33,7 +34,7 @@ async def run_conversion_command(command):
         return None, None
 
 
-async def convert_file_x(input_path, output_dir):
+async def convert_file_x(input_path: str, output_dir: str) -> str | None:
     logger.info(f"开始转换文件: {input_path}")
     # 获取文件名和扩展名
     file_name, file_ext = os.path.splitext(os.path.basename(input_path))

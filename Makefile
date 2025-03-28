@@ -13,7 +13,7 @@ help:
 	@echo "Available commands:"
 	@echo "make format      Automatically format the code(isort + black)"
 	@echo "make flake8        Check the code style(flake8)"
-	@echo "make typecheck   Perform static type checking(mypy)"
+	@echo "make mypy   Perform static type checking(mypy)"
 	@echo "make test        Run the tests"
 	@echo "make all         Execute all checks (format + lint + typecheck + test)"
 
@@ -31,7 +31,7 @@ flake8:
 	$(VENV_SCRIPTS)/flake8 --config .flake8 $(SOURCE_DIR)
 
 # 静态类型检查
-typecheck:
+mypy:
 	@echo ===============run mypy===============
 	$(VENV_SCRIPTS)/mypy --config-file .mypy.ini $(SOURCE_DIR)
 
@@ -41,4 +41,4 @@ test:
 	$(VENV_SCRIPTS)/pytest tests/
 
 # 执行所有检查
-all: format flake8 typecheck test
+all: format flake8 mypy test

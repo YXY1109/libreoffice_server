@@ -18,4 +18,4 @@ class ConfigSettings(BaseSettings):
 
 
 # 创建 Settings 类的实例
-config = ConfigSettings()
+config = ConfigSettings()  # type: ignore
