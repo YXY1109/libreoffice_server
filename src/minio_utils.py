@@ -1,5 +1,5 @@
-import os
 from mimetypes import guess_type
+import os
 
 from loguru import logger
 from minio import Minio
@@ -42,7 +42,7 @@ def upload_file(client, bucket_name, source_file):
     try:
         # minio 的 put_object 方法目前不支持异步文件对象，所以使用 open 同步打开文件
         file_stat = os.stat(source_file)
-        with open(source_file, 'rb') as sync_file:
+        with open(source_file, "rb") as sync_file:
             client.put_object(bucket_name, destination_file, data=sync_file, length=file_stat.st_size)
         logger.success(f"File {destination_file} uploaded with content-type {content_type}.")
         file_url = client.presigned_get_object(bucket_name, destination_file)
@@ -61,8 +61,12 @@ def upload_to_minio(user_id: int, source_file_list: list | str):
     :param source_file_list: 用户上传的文件
     :return:
     """
-    client = Minio(endpoint=f"{config.MINIO_URL}", access_key=config.MINIO_ACCESS_KEY,
-                   secret_key=config.MINIO_SECRET_KEY, secure=False)
+    client = Minio(
+        endpoint=f"{config.MINIO_URL}",
+        access_key=config.MINIO_ACCESS_KEY,
+        secret_key=config.MINIO_SECRET_KEY,
+        secure=False,
+    )
     logger.info(f"Minio客户端创建成功；{client}")
 
     bucket_name = f"libreoffice-{user_id}"
@@ -81,5 +85,5 @@ def upload_to_minio(user_id: int, source_file_list: list | str):
     return file_url_list
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     upload_to_minio(3, "/Users/cj/Downloads/test.doc")

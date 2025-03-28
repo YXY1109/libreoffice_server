@@ -4,11 +4,7 @@ import os
 from loguru import logger
 
 # 定义支持的文件扩展名映射
-SUPPORTED_EXTENSIONS = {
-    '.doc': '.docx',
-    '.ppt': '.pptx',
-    '.xls': '.xlsx'
-}
+SUPPORTED_EXTENSIONS = {".doc": ".docx", ".ppt": ".pptx", ".xls": ".xlsx"}
 
 
 def get_target_extension(file_ext):
@@ -28,9 +24,7 @@ async def run_conversion_command(command):
     """
     try:
         process = await asyncio.create_subprocess_shell(
-            command,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE
+            command, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
         )
         stdout, stderr = await process.communicate()
         return stdout.decode(), stderr.decode()
@@ -51,7 +45,7 @@ async def convert_file_x(input_path, output_dir):
     # 定义输出文件路径
     output_path = os.path.join(output_dir, file_name + target_ext)
     # 执行 LibreOffice 转换命令
-    command = f'libreoffice7.1 --headless --convert-to {target_ext[1:]} --outdir {output_dir} {input_path}'
+    command = f"libreoffice7.1 --headless --convert-to {target_ext[1:]} --outdir {output_dir} {input_path}"
     logger.info(f"执行转换命令: {command}")
     stdout, stderr = await run_conversion_command(command)
     if stdout:

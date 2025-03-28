@@ -1,6 +1,16 @@
+#质量管理
+black==25.1.0
+flake8==7.1.2
+isort==6.0.1
+mypy==1.15.0
+pre-commit==4.2.0
+pytest==8.3.5
+
+#依赖包
 sanic==24.12.0
 aiofiles==24.1.0
 loguru==0.7.3
 python-dotenv==1.0.1
 pydantic==2.10.6
 minio==7.2.15
+
